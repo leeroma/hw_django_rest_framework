@@ -28,3 +28,17 @@ class MultiplyView(APIView):
             answer = {"error": "incorrect input"}
 
         return Response(answer)
+
+
+class SubtractView(APIView):
+    def get(self, request):
+        return Response({"a": "enter a number", "b": "enter a number", "returns": "difference"})
+
+    def post(self, request):
+        a, b = request.data['a'], request.data['b']
+        if isinstance(a, int) and isinstance(b, int):
+            answer = {"answer": a - b}
+        else:
+            answer = {"error": "incorrect input"}
+
+        return Response(answer)
