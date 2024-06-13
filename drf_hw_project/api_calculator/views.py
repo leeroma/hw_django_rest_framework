@@ -10,7 +10,7 @@ class AddView(APIView):
     def post(self, request):
         a, b = request.data['a'], request.data['b']
 
-        if not isinstance(a, int) and not isinstance(b, int):
+        if not isinstance(a, int) or not isinstance(b, int):
             error = {"error": "Incorrect input!"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
@@ -25,7 +25,7 @@ class MultiplyView(APIView):
     def post(self, request):
         a, b = request.data['a'], request.data['b']
 
-        if not isinstance(a, int) and not isinstance(b, int):
+        if not isinstance(a, int) or not isinstance(b, int):
             error = {"error": "Incorrect input!"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
@@ -40,7 +40,7 @@ class SubtractView(APIView):
     def post(self, request):
         a, b = request.data['a'], request.data['b']
 
-        if not isinstance(a, int) and not isinstance(b, int):
+        if not isinstance(a, int) or not isinstance(b, int):
             error = {"error": "Incorrect input!"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
@@ -59,10 +59,10 @@ class DivideView(APIView):
             error = {"error": "Division by zero!"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        elif isinstance(a, int) and isinstance(b, int):
+        elif not isinstance(a, int) or not isinstance(b, int):
             error = {"error": "Incorrect input!"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        answer = {"answer": a // b}
+        answer = {"answer": a / b}
 
         return Response(answer)
