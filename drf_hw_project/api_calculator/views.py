@@ -9,11 +9,12 @@ class AddView(APIView):
 
     def post(self, request):
         a, b = request.data['a'], request.data['b']
-        if isinstance(a, int) and isinstance(b, int):
-            answer = {"answer": a + b}
-        else:
-            answer = {"error": "incorrect input"}
 
+        if not isinstance(a, int) and not isinstance(b, int):
+            error = {"error": "Incorrect input!"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        answer = {"answer": a + b}
         return Response(answer)
 
 
@@ -23,11 +24,12 @@ class MultiplyView(APIView):
 
     def post(self, request):
         a, b = request.data['a'], request.data['b']
-        if isinstance(a, int) and isinstance(b, int):
-            answer = {"answer": a * b}
-        else:
-            answer = {"error": "incorrect input"}
 
+        if not isinstance(a, int) and not isinstance(b, int):
+            error = {"error": "Incorrect input!"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        answer = {"answer": a * b}
         return Response(answer)
 
 
@@ -37,11 +39,12 @@ class SubtractView(APIView):
 
     def post(self, request):
         a, b = request.data['a'], request.data['b']
-        if isinstance(a, int) and isinstance(b, int):
-            answer = {"answer": a - b}
-        else:
-            answer = {"error": "incorrect input"}
 
+        if not isinstance(a, int) and not isinstance(b, int):
+            error = {"error": "Incorrect input!"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        answer = {"answer": a - b}
         return Response(answer)
 
 
@@ -54,11 +57,12 @@ class DivideView(APIView):
 
         if b == 0:
             error = {"error": "Division by zero!"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST, )
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        if isinstance(a, int) and isinstance(b, int):
-            answer = {"answer": a / b}
-        else:
-            answer = {"error": "incorrect input"}
+        elif isinstance(a, int) and isinstance(b, int):
+            error = {"error": "Incorrect input!"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        answer = {"answer": a // b}
 
         return Response(answer)
