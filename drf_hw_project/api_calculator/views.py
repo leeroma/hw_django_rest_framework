@@ -3,66 +3,42 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-class AddView(APIView):
-    def get(self, request):
-        return Response({"a": "enter a number", "b": "enter a number", "returns": "sum"})
+class Calculator:
+    def add(self, a, b):
+        return a + b
 
-    def post(self, request):
-        a, b = request.data['a'], request.data['b']
+    def multiply(self, a, b):
+        return a * b
 
-        if not isinstance(a, int) or not isinstance(b, int):
-            error = {"error": "Incorrect input!"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+    def subtract(self, a, b):
+        return a - b
 
-        answer = {"answer": a + b}
-        return Response(answer)
-
-
-class MultiplyView(APIView):
-    def get(self, request):
-        return Response({"a": "enter a number", "b": "enter a number", "returns": "product"})
-
-    def post(self, request):
-        a, b = request.data['a'], request.data['b']
-
-        if not isinstance(a, int) or not isinstance(b, int):
-            error = {"error": "Incorrect input!"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
-
-        answer = {"answer": a * b}
-        return Response(answer)
-
-
-class SubtractView(APIView):
-    def get(self, request):
-        return Response({"a": "enter a number", "b": "enter a number", "returns": "difference"})
-
-    def post(self, request):
-        a, b = request.data['a'], request.data['b']
-
-        if not isinstance(a, int) or not isinstance(b, int):
-            error = {"error": "Incorrect input!"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
-
-        answer = {"answer": a - b}
-        return Response(answer)
-
-
-class DivideView(APIView):
-    def get(self, request):
-        return Response({"a": "enter a number", "b": "enter a number", "returns": "quotient"})
-
-    def post(self, request):
-        a, b = request.data['a'], request.data['b']
-
+    def divide(self, a, b):
         if b == 0:
+            raise ValueError
+        return a / b
+
+
+class CalculatorView(APIView):
+    _calculator = Calculator()
+
+    def get(self, request):
+        return Response({"a": "enter a number", "b": "enter a number", "method": "add/multiply/subtract/divide"})
+
+    def post(self, request):
+        a, b, method = request.data['a'], request.data['b'], request.data['method']
+
+        if not isinstance(a, int) or not isinstance(b, int):
+            error = {"error": "Incorrect input!"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            answer = getattr(self._calculator, method)(a, b)
+        except AttributeError:
+            error = {"error": "No such method"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError:
             error = {"error": "Division by zero!"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        elif not isinstance(a, int) or not isinstance(b, int):
-            error = {"error": "Incorrect input!"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
-
-        answer = {"answer": a / b}
-
-        return Response(answer)
+        return Response({"answer": answer})
