@@ -28,10 +28,11 @@ class CalculatorView(APIView):
     def post(self, request):
         a, b, method = request.data['a'], request.data['b'], request.data['method']
 
-        if not isinstance(a, int) or not isinstance(b, int):
+        if not a.isnumeric() or not b.isnumeric():
             error = {"error": "Incorrect input!"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
+        a, b = int(a), int(b)
         try:
             answer = getattr(self._calculator, method)(a, b)
         except AttributeError:

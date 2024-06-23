@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <title>Calculator</title>
+</head>
+<body>
+<label for="a">Number "a"</label>
+<input id="a" type="number">
+<br>
+<label for="b">Number "b"</label>
+<input id="b" type="number">
+<br>
+<div>
+    <input class="method" type="radio" value="add" name="method"> add
+</div>
+<div>
+    <input class="method" type="radio" value="multiply" name="method"> multiply
+</div>
+<div>
+    <input class="method" type="radio" value="subtract" name="method"> subtract
+</div>
+<div>
+    <input class="method" type="radio" value="divide" name="method"> divide
+</div>
+<button class="calculate">Calculate</button>
+<h1 class="answer"></h1>
+
+<script>
+    $(document).on('click', '.calculate', function () {
+        $.ajax(
+            {
+                url: 'http://127.0.0.1:8000{% url 'calculator' %}',
+                type: 'POST',
+                data: {
+                    'a': $('#a').val(),
+                    'b': $('#b').val(),
+                    'method': $('.method:checked').val(),
+                },
+                success: function (data) {
+                    $('.answer').html('answer: ' + data['answer']).css({'color': 'green'})
+                },
+                error: function (data) {
+                    let errorText = data['responseJSON']
+                    $('.answer').html(errorText['error']).css({'color': 'red'})
+                }
+            }
+        )
+    })
+</script>
+</body>
+</html>
